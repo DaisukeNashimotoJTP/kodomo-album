@@ -47,7 +47,7 @@ class LoginViewModel @Inject constructor(
             when (val result = signInUseCase(state.email, state.password)) {
                 is Resource.Success -> {
                     state = state.copy(isLoading = false)
-                    sendUiEvent(UiEvent.Navigate("main"))
+                    sendUiEvent(UiEvent.Navigate("profile"))
                 }
                 is Resource.Error -> {
                     state = state.copy(isLoading = false)

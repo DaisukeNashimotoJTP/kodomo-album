@@ -55,7 +55,7 @@ class SignUpViewModel @Inject constructor(
             when (val result = signUpUseCase(state.email, state.password, state.displayName)) {
                 is Resource.Success -> {
                     state = state.copy(isLoading = false)
-                    sendUiEvent(UiEvent.Navigate("main"))
+                    sendUiEvent(UiEvent.Navigate("profile"))
                 }
                 is Resource.Error -> {
                     state = state.copy(isLoading = false)

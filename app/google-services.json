@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "123456789012",
-    "project_id": "kodomo-album-firebase",
-    "storage_bucket": "kodomo-album-firebase.appspot.com"
+    "project_number": "600585971474",
+    "project_id": "kodomo-album",
+    "storage_bucket": "kodomo-album.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:123456789012:android:abcd1234efgh5678",
+        "mobilesdk_app_id": "1:600585971474:android:13ec41dbf3851ab8dbb5cb",
         "android_client_info": {
           "package_name": "com.example.kodomo_album"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "123456789012-abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDummyKeyForTesting123456789ABCDEFG"
+          "current_key": "AIzaSyBCxIzu1FrO2GGxb28fnutzcDZesv00uD8"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "123456789012-abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

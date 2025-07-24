@@ -44,11 +44,11 @@
 
 ## フェーズ3: コアデータモデル実装
 
-- [ ] 3. データベース設計・実装
-- [ ] 3.1 Room データベース構築
-  - [ ] Entity クラス定義（Child、Media、Diary等）
-  - [ ] DAO インターフェース実装
-  - [ ] Database クラス作成
+- [] 3. データベース設計・実装
+- [x] 3.1 Room データベース構築
+  - [x] Entity クラス定義（Child、Media、Diary等）
+  - [x] DAO インターフェース実装
+  - [x] Database クラス作成
   - _要件: データモデル設計_
 
 - [ ] 3.2 Firestore統合

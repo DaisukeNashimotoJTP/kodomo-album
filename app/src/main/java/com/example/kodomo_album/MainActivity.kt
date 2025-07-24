@@ -5,45 +5,114 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.kodomo_album.core.util.UiEvent
+import com.example.kodomo_album.data.repository.AuthRepository
+import com.example.kodomo_album.presentation.auth.LoginScreen
+import com.example.kodomo_album.presentation.auth.SignUpScreen
+import com.example.kodomo_album.presentation.auth.PasswordResetScreen
+import com.example.kodomo_album.presentation.profile.ProfileScreen
 import com.example.kodomo_album.ui.theme.KodomoalbumTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    
+    @Inject
+    lateinit var authRepository: AuthRepository
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             KodomoalbumTheme {
+                val navController = rememberNavController()
+                val currentUser by authRepository.getCurrentUser().collectAsState(initial = null)
+                
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    NavHost(
+                        navController = navController,
+                        startDestination = if (currentUser != null) "profile" else "login"
+                    ) {
+                        composable("login") {
+                            LoginScreen(
+                                onNavigate = { uiEvent ->
+                                    when (uiEvent) {
+                                        is UiEvent.Navigate -> {
+                                            when (uiEvent.route) {
+                                                "profile" -> navController.navigate("profile") {
+                                                    popUpTo("login") { inclusive = true }
+                                                }
+                                                "signup" -> navController.navigate("signup")
+                                                "password_reset" -> navController.navigate("password_reset")
+                                                else -> navController.navigate(uiEvent.route)
+                                            }
+                                        }
+                                    }
+                                },
+                                onShowSnackbar = { message ->
+                                    // Handle snackbar display - could implement SnackbarHost here
+                                }
+                            )
+                        }
+                        composable("signup") {
+                            SignUpScreen(
+                                onNavigate = { uiEvent ->
+                                    when (uiEvent.route) {
+                                        "profile" -> navController.navigate("profile") {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                        else -> navController.navigate(uiEvent.route)
+                                    }
+                                },
+                                onNavigateUp = {
+                                    navController.popBackStack()
+                                },
+                                onShowSnackbar = { message ->
+                                    // Handle snackbar display
+                                }
+                            )
+                        }
+                        composable("password_reset") {
+                            PasswordResetScreen(
+                                onNavigateUp = {
+                                    navController.popBackStack()
+                                },
+                                onShowSnackbar = { message ->
+                                    // Handle snackbar display
+                                }
+                            )
+                        }
+                        composable("profile") {
+                            ProfileScreen(
+                                onNavigate = { uiEvent ->
+                                    when (uiEvent) {
+                                        is UiEvent.Navigate -> {
+                                            when (uiEvent.route) {
+                                                "login" -> navController.navigate("login") {
+                                                    popUpTo(0) { inclusive = true }
+                                                }
+                                                else -> navController.navigate(uiEvent.route)
+                                            }
+                                        }
+                                    }
+                                },
+                                onShowSnackbar = { message ->
+                                    // Handle snackbar display
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    KodomoalbumTheme {
-        Greeting("Android")
     }
 }

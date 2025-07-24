@@ -5,7 +5,10 @@
       "Bash(./gradlew:*)",
       "Bash(.gradlew clean)",
       "Bash(gradlew.bat clean:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(keytool:*)",
+      "Bash(adb logcat:*)",
+      "Bash(adb:*)"
     ],
     "deny": []
   }

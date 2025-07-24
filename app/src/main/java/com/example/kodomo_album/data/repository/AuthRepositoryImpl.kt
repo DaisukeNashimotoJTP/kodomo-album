@@ -111,7 +111,22 @@ class AuthRepositoryImpl @Inject constructor(
                                 saveUserToLocal(user)
                                 trySend(user)
                             } catch (e: Exception) {
-                                trySend(null)
+                                // If Firestore user doesn't exist, create basic user from Firebase Auth
+                                val basicUser = User(
+                                    id = firebaseUser.uid,
+                                    email = firebaseUser.email ?: "",
+                                    displayName = firebaseUser.displayName ?: "",
+                                    profileImageUrl = firebaseUser.photoUrl?.toString() ?: "",
+                                    createdAt = System.currentTimeMillis(),
+                                    updatedAt = System.currentTimeMillis()
+                                )
+                                try {
+                                    saveUserToFirestore(basicUser)
+                                    saveUserToLocal(basicUser)
+                                    trySend(basicUser)
+                                } catch (saveException: Exception) {
+                                    trySend(null)
+                                }
                             }
                         }
                     } catch (e: Exception) {
