@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.Flow
 interface DiaryDao {
     
     @Query("SELECT * FROM diaries WHERE childId = :childId ORDER BY date DESC")
-    fun getDiariesByChildId(childId: String): Flow<List<DiaryEntity>>
+    fun getDiariesByChildIdFlow(childId: String): Flow<List<DiaryEntity>>
+    
+    @Query("SELECT * FROM diaries WHERE childId = :childId ORDER BY date DESC")
+    suspend fun getDiariesByChildId(childId: String): List<DiaryEntity>
     
     @Query("SELECT * FROM diaries WHERE childId = :childId AND date BETWEEN :startDate AND :endDate ORDER BY date DESC")
     fun getDiariesByDateRange(childId: String, startDate: Long, endDate: Long): Flow<List<DiaryEntity>>
@@ -29,13 +32,16 @@ interface DiaryDao {
     suspend fun insertDiaries(diaries: List<DiaryEntity>)
     
     @Update
-    suspend fun updateDiary(diary: DiaryEntity)
+    suspend fun update(diary: DiaryEntity)
     
     @Delete
     suspend fun deleteDiary(diary: DiaryEntity)
     
     @Query("DELETE FROM diaries WHERE id = :diaryId")
-    suspend fun deleteDiaryById(diaryId: String)
+    suspend fun deleteById(diaryId: String)
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrUpdate(diary: DiaryEntity)
     
     @Query("DELETE FROM diaries WHERE childId = :childId")
     suspend fun deleteDiariesByChildId(childId: String)

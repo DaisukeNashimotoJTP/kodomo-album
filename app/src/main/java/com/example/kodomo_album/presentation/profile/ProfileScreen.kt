@@ -235,6 +235,21 @@ fun ProfileScreen(
 
                 // Action Buttons
                 Button(
+                    onClick = { onNavigate(UiEvent.Navigate("children")) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("子ども管理")
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Button(
                     onClick = { showSignOutDialog = true },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(

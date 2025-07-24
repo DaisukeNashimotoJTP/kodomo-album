@@ -13,12 +13,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
 import com.example.kodomo_album.core.util.UiEvent
 import com.example.kodomo_album.data.repository.AuthRepository
 import com.example.kodomo_album.presentation.auth.LoginScreen
 import com.example.kodomo_album.presentation.auth.SignUpScreen
 import com.example.kodomo_album.presentation.auth.PasswordResetScreen
 import com.example.kodomo_album.presentation.profile.ProfileScreen
+import com.example.kodomo_album.presentation.child.ChildListScreen
+import com.example.kodomo_album.presentation.child.AddEditChildScreen
 import com.example.kodomo_album.ui.theme.KodomoalbumTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -100,6 +104,7 @@ class MainActivity : ComponentActivity() {
                                                 "login" -> navController.navigate("login") {
                                                     popUpTo(0) { inclusive = true }
                                                 }
+                                                "children" -> navController.navigate("children")
                                                 else -> navController.navigate(uiEvent.route)
                                             }
                                         }
@@ -107,6 +112,41 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onShowSnackbar = { message ->
                                     // Handle snackbar display
+                                }
+                            )
+                        }
+                        composable("children") {
+                            ChildListScreen(
+                                userId = currentUser?.id ?: "",
+                                onAddChildClick = {
+                                    navController.navigate("add_child")
+                                },
+                                onEditChildClick = { child ->
+                                    navController.navigate("edit_child/${child.id}")
+                                }
+                            )
+                        }
+                        composable("add_child") {
+                            AddEditChildScreen(
+                                userId = currentUser?.id ?: "",
+                                childId = null,
+                                childToEdit = null,
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        composable(
+                            "edit_child/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            AddEditChildScreen(
+                                userId = currentUser?.id ?: "",
+                                childId = childId,
+                                childToEdit = null,
+                                onNavigateBack = {
+                                    navController.popBackStack()
                                 }
                             )
                         }

@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.Flow
 interface MediaDao {
     
     @Query("SELECT * FROM media WHERE childId = :childId ORDER BY takenAt DESC")
-    fun getMediaByChildId(childId: String): Flow<List<MediaEntity>>
+    fun getMediaByChildIdFlow(childId: String): Flow<List<MediaEntity>>
+    
+    @Query("SELECT * FROM media WHERE childId = :childId ORDER BY takenAt DESC")
+    suspend fun getMediaByChildId(childId: String): List<MediaEntity>
     
     @Query("SELECT * FROM media WHERE childId = :childId AND takenAt BETWEEN :startDate AND :endDate ORDER BY takenAt DESC")
     fun getMediaByDateRange(childId: String, startDate: Long, endDate: Long): Flow<List<MediaEntity>>
@@ -29,13 +32,16 @@ interface MediaDao {
     suspend fun insertMediaList(mediaList: List<MediaEntity>)
     
     @Update
-    suspend fun updateMedia(media: MediaEntity)
+    suspend fun update(media: MediaEntity)
     
     @Delete
     suspend fun deleteMedia(media: MediaEntity)
     
     @Query("DELETE FROM media WHERE id = :mediaId")
-    suspend fun deleteMediaById(mediaId: String)
+    suspend fun deleteById(mediaId: String)
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrUpdate(media: MediaEntity)
     
     @Query("DELETE FROM media WHERE childId = :childId")
     suspend fun deleteMediaByChildId(childId: String)

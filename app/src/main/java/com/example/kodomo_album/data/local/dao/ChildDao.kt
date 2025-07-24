@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 interface ChildDao {
     
     @Query("SELECT * FROM children WHERE userId = :userId ORDER BY birthDate DESC")
-    fun getChildrenByUserId(userId: String): Flow<List<ChildEntity>>
+    fun getChildrenByUserIdFlow(userId: String): Flow<List<ChildEntity>>
+    
+    @Query("SELECT * FROM children WHERE userId = :userId ORDER BY birthDate DESC")
+    suspend fun getChildrenByUserId(userId: String): List<ChildEntity>
     
     @Query("SELECT * FROM children WHERE id = :childId")
     suspend fun getChildById(childId: String): ChildEntity?
-    
-    @Query("SELECT * FROM children WHERE userId = :userId ORDER BY birthDate DESC")
-    suspend fun getChildrenByUserIdSync(userId: String): List<ChildEntity>
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChild(child: ChildEntity)
@@ -23,13 +23,16 @@ interface ChildDao {
     suspend fun insertChildren(children: List<ChildEntity>)
     
     @Update
-    suspend fun updateChild(child: ChildEntity)
+    suspend fun update(child: ChildEntity)
     
     @Delete
     suspend fun deleteChild(child: ChildEntity)
     
     @Query("DELETE FROM children WHERE id = :childId")
-    suspend fun deleteChildById(childId: String)
+    suspend fun deleteById(childId: String)
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrUpdate(child: ChildEntity)
     
     @Query("DELETE FROM children WHERE userId = :userId")
     suspend fun deleteChildrenByUserId(userId: String)

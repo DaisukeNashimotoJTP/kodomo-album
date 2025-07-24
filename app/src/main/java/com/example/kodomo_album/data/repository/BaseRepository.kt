@@ -56,4 +56,14 @@ abstract class BaseRepository {
             )
         }
     }
+    
+    protected suspend fun <T> safeCall(
+        call: suspend () -> T
+    ): T? {
+        return try {
+            call()
+        } catch (e: Exception) {
+            null
+        }
+    }
 }
