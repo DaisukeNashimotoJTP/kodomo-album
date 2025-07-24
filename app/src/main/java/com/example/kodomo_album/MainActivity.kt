@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -23,6 +24,8 @@ import com.example.kodomo_album.presentation.auth.PasswordResetScreen
 import com.example.kodomo_album.presentation.profile.ProfileScreen
 import com.example.kodomo_album.presentation.child.ChildListScreen
 import com.example.kodomo_album.presentation.child.AddEditChildScreen
+import com.example.kodomo_album.presentation.media.MediaUploadScreen
+import com.example.kodomo_album.domain.usecase.child.GetChildrenUseCase
 import com.example.kodomo_album.ui.theme.KodomoalbumTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -123,6 +126,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onEditChildClick = { child ->
                                     navController.navigate("edit_child/${child.id}")
+                                },
+                                onAddMediaClick = {
+                                    navController.navigate("media_upload")
                                 }
                             )
                         }
@@ -145,6 +151,23 @@ class MainActivity : ComponentActivity() {
                                 userId = currentUser?.id ?: "",
                                 childId = childId,
                                 childToEdit = null,
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        composable("media_upload") {
+                            val childManagementViewModel: com.example.kodomo_album.presentation.child.ChildManagementViewModel = hiltViewModel()
+                            val children by childManagementViewModel.children.collectAsState()
+                            
+                            LaunchedEffect(currentUser?.id) {
+                                currentUser?.id?.let { userId ->
+                                    childManagementViewModel.loadChildren(userId)
+                                }
+                            }
+                            
+                            MediaUploadScreen(
+                                children = children,
                                 onNavigateBack = {
                                     navController.popBackStack()
                                 }

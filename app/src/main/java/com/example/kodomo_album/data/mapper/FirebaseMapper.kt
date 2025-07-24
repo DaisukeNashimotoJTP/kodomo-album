@@ -4,6 +4,8 @@ import com.example.kodomo_album.data.firebase.models.*
 import com.example.kodomo_album.data.local.entity.*
 import com.example.kodomo_album.domain.model.Child
 import com.example.kodomo_album.domain.model.Gender
+import com.example.kodomo_album.domain.model.Media
+import com.example.kodomo_album.domain.model.MediaType
 import com.google.firebase.Timestamp
 import java.time.Instant
 import java.time.LocalDate
@@ -115,3 +117,62 @@ class FirebaseMapper @Inject constructor() {
         updatedAt = child.updatedAt
     )
 }
+
+// Extension functions for easier usage
+fun MediaEntity.toDomain(): Media = Media(
+    id = id,
+    childId = childId,
+    type = MediaType.valueOf(type),
+    url = url,
+    thumbnailUrl = thumbnailUrl,
+    caption = caption,
+    takenAt = Instant.ofEpochMilli(takenAt)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime(),
+    uploadedAt = Instant.ofEpochMilli(uploadedAt)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
+)
+
+fun Media.toEntity(): MediaEntity = MediaEntity(
+    id = id,
+    childId = childId,
+    type = type.name,
+    url = url,
+    thumbnailUrl = thumbnailUrl,
+    caption = caption,
+    takenAt = takenAt.atZone(ZoneId.systemDefault())
+        .toInstant()
+        .toEpochMilli(),
+    uploadedAt = uploadedAt.atZone(ZoneId.systemDefault())
+        .toInstant()
+        .toEpochMilli(),
+    isUploaded = true,
+    localPath = null
+)
+
+fun Media.toFirebaseMedia(): FirebaseMedia = FirebaseMedia(
+    id = id,
+    childId = childId,
+    type = type.name,
+    url = url,
+    thumbnailUrl = thumbnailUrl,
+    caption = caption,
+    takenAt = Timestamp(takenAt.atZone(ZoneId.systemDefault()).toInstant()),
+    uploadedAt = Timestamp(uploadedAt.atZone(ZoneId.systemDefault()).toInstant())
+)
+
+fun FirebaseMedia.toDomain(): Media = Media(
+    id = id,
+    childId = childId,
+    type = MediaType.valueOf(type),
+    url = url,
+    thumbnailUrl = thumbnailUrl,
+    caption = caption,
+    takenAt = takenAt.toDate().toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime(),
+    uploadedAt = uploadedAt.toDate().toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
+)

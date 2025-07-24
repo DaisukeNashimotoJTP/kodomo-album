@@ -216,7 +216,7 @@ class SyncRepository @Inject constructor(
         return if (offlineManager.isNetworkAvailable()) {
             firestoreService.getMediaFlow(childId)
         } else {
-            mediaDao.getMediaByChildIdFlow(childId)
+            mediaDao.getMediaByChildId(childId)
         }
     }
 

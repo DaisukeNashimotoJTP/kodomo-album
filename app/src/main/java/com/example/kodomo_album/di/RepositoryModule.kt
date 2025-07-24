@@ -4,6 +4,8 @@ import com.example.kodomo_album.data.repository.AuthRepository
 import com.example.kodomo_album.data.repository.AuthRepositoryImpl
 import com.example.kodomo_album.data.repository.ChildRepository
 import com.example.kodomo_album.data.repository.ChildRepositoryImpl
+import com.example.kodomo_album.data.repository.MediaRepositoryImpl
+import com.example.kodomo_album.domain.repository.MediaRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,4 +27,10 @@ abstract class RepositoryModule {
     abstract fun bindChildRepository(
         childRepositoryImpl: ChildRepositoryImpl
     ): ChildRepository
+    
+    @Binds
+    @Singleton
+    abstract fun bindMediaRepository(
+        mediaRepositoryImpl: MediaRepositoryImpl
+    ): MediaRepository
 }

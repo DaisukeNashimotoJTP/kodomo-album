@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,6 +32,7 @@ fun ChildListScreen(
     userId: String,
     onAddChildClick: () -> Unit,
     onEditChildClick: (Child) -> Unit,
+    onAddMediaClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: ChildManagementViewModel = hiltViewModel()
 ) {
@@ -67,11 +69,20 @@ fun ChildListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddChildClick,
-                modifier = Modifier.padding(16.dp)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "子どもを追加")
+                FloatingActionButton(
+                    onClick = onAddMediaClick,
+                    containerColor = MaterialTheme.colorScheme.secondary
+                ) {
+                    Icon(Icons.Default.PhotoCamera, contentDescription = "写真・動画を追加")
+                }
+                FloatingActionButton(
+                    onClick = onAddChildClick
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "子どもを追加")
+                }
             }
         }
     ) { paddingValues ->

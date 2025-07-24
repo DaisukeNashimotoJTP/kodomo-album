@@ -183,7 +183,7 @@ class FirestoreService @Inject constructor(
 
     fun getMediaFlow(childId: String): Flow<List<MediaEntity>> {
         val firestoreFlow = mediaFirestoreDataSource.getMediaByChildIdFlow(childId)
-        val localFlow = mediaDao.getMediaByChildIdFlow(childId)
+        val localFlow = mediaDao.getMediaByChildId(childId)
         
         return combine(firestoreFlow, localFlow) { firebaseMedia, localMedia ->
             // Firestoreのデータをローカルに反映
@@ -192,7 +192,7 @@ class FirestoreService @Inject constructor(
                 mediaDao.insertOrUpdate(localMediaEntity.copy(isUploaded = true))
             }
             // 最新のローカルデータを返す
-            mediaDao.getMediaByChildId(childId)
+            localMedia
         }
     }
 

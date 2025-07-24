@@ -67,6 +67,14 @@ object FirebaseModule {
     ): MediaFirestoreDataSource {
         return MediaFirestoreDataSource(firestore)
     }
+    
+    @Provides
+    @Singleton
+    fun provideMediaStorageDataSource(
+        storage: FirebaseStorage
+    ): MediaStorageDataSource {
+        return MediaStorageDataSource(storage)
+    }
 
     @Provides
     @Singleton
