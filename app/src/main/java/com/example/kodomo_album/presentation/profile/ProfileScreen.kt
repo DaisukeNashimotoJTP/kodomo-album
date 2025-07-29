@@ -249,6 +249,22 @@ fun ProfileScreen(
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
+                // Family Management Button
+                Button(
+                    onClick = { onNavigate(UiEvent.Navigate("family_management")) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Group,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("家族管理")
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
                 Button(
                     onClick = { showSignOutDialog = true },
                     modifier = Modifier.fillMaxWidth(),

@@ -28,6 +28,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.kodomo_album.domain.model.Media
 import com.example.kodomo_album.domain.model.MediaType
+import com.example.kodomoalbum.presentation.ui.sharing.ShareContentDialog
+import com.example.kodomoalbum.presentation.ui.sharing.FamilyManagementViewModel
 import java.time.format.DateTimeFormatter
 import java.time.LocalDate
 
@@ -37,15 +39,23 @@ fun MediaTimelineScreen(
     childId: String,
     onMediaClick: (Media) -> Unit,
     onNavigateUp: () -> Unit,
-    viewModel: MediaTimelineViewModel = hiltViewModel()
+    viewModel: MediaTimelineViewModel = hiltViewModel(),
+    familyViewModel: FamilyManagementViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val familyState by familyViewModel.uiState.collectAsStateWithLifecycle()
     var isGridView by remember { mutableStateOf(true) }
     var showFilterDialog by remember { mutableStateOf(false) }
     var showDateFilterDialog by remember { mutableStateOf(false) }
+    var showShareDialog by remember { mutableStateOf(false) }
+    var selectedMediaForShare: Media? by remember { mutableStateOf(null) }
 
     LaunchedEffect(childId) {
         viewModel.onChildChanged(childId)
+    }
+    
+    LaunchedEffect(Unit) {
+        familyViewModel.loadFamilies()
     }
 
     Column(
@@ -141,12 +151,20 @@ fun MediaTimelineScreen(
                     MediaGridView(
                         mediaList = uiState.mediaList,
                         onMediaClick = onMediaClick,
+                        onShareClick = { media ->
+                            selectedMediaForShare = media
+                            showShareDialog = true
+                        },
                         modifier = Modifier.weight(1f)
                     )
                 } else {
                     MediaListView(
                         mediaList = uiState.mediaList,
                         onMediaClick = onMediaClick,
+                        onShareClick = { media ->
+                            selectedMediaForShare = media
+                            showShareDialog = true
+                        },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -174,12 +192,31 @@ fun MediaTimelineScreen(
             onDismiss = { showDateFilterDialog = false }
         )
     }
+    
+    // 共有ダイアログ
+    if (showShareDialog && selectedMediaForShare != null) {
+        ShareContentDialog(
+            onDismiss = { 
+                showShareDialog = false
+                selectedMediaForShare = null
+            },
+            onShare = { selectedUsers ->
+                selectedMediaForShare?.let { media ->
+                    // TODO: ShareContentUseCaseを呼び出してコンテンツを共有
+                }
+                showShareDialog = false
+                selectedMediaForShare = null
+            },
+            familyMembers = familyState.families.flatMap { it.members }
+        )
+    }
 }
 
 @Composable
 private fun MediaGridView(
     mediaList: List<Media>,
     onMediaClick: (Media) -> Unit,
+    onShareClick: (Media) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalStaggeredGrid(
@@ -192,7 +229,8 @@ private fun MediaGridView(
         items(mediaList) { media ->
             MediaGridItem(
                 media = media,
-                onClick = { onMediaClick(media) }
+                onClick = { onMediaClick(media) },
+                onShareClick = { onShareClick(media) }
             )
         }
     }
@@ -202,6 +240,7 @@ private fun MediaGridView(
 private fun MediaListView(
     mediaList: List<Media>,
     onMediaClick: (Media) -> Unit,
+    onShareClick: (Media) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -212,7 +251,8 @@ private fun MediaListView(
         items(mediaList) { media ->
             MediaListItem(
                 media = media,
-                onClick = { onMediaClick(media) }
+                onClick = { onMediaClick(media) },
+                onShareClick = { onShareClick(media) }
             )
         }
     }
@@ -222,6 +262,7 @@ private fun MediaListView(
 private fun MediaGridItem(
     media: Media,
     onClick: () -> Unit,
+    onShareClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -282,6 +323,26 @@ private fun MediaGridItem(
                     style = MaterialTheme.typography.labelSmall
                 )
             }
+            
+            // 共有ボタン
+            IconButton(
+                onClick = onShareClick,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(4.dp)
+                    .background(
+                        Color.Black.copy(alpha = 0.7f),
+                        RoundedCornerShape(20.dp)
+                    )
+                    .size(32.dp)
+            ) {
+                Icon(
+                    Icons.Default.Share,
+                    contentDescription = "共有",
+                    tint = Color.White,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
         }
     }
 }
@@ -290,6 +351,7 @@ private fun MediaGridItem(
 private fun MediaListItem(
     media: Media,
     onClick: () -> Unit,
+    onShareClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -367,6 +429,15 @@ private fun MediaListItem(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
+            
+            // 共有ボタン
+            IconButton(onClick = onShareClick) {
+                Icon(
+                    Icons.Default.Share,
+                    contentDescription = "共有",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }

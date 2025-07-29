@@ -18,6 +18,38 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    private val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Create families table
+            database.execSQL("""
+                CREATE TABLE IF NOT EXISTS `families` (
+                    `id` TEXT NOT NULL,
+                    `name` TEXT NOT NULL,
+                    `createdBy` TEXT NOT NULL,
+                    `members` TEXT NOT NULL,
+                    `createdAt` TEXT NOT NULL,
+                    `updatedAt` TEXT NOT NULL,
+                    PRIMARY KEY(`id`)
+                )
+            """.trimIndent())
+
+            // Create invitations table
+            database.execSQL("""
+                CREATE TABLE IF NOT EXISTS `invitations` (
+                    `id` TEXT NOT NULL,
+                    `familyId` TEXT NOT NULL,
+                    `inviterUserId` TEXT NOT NULL,
+                    `inviterName` TEXT NOT NULL,
+                    `inviteeEmail` TEXT NOT NULL,
+                    `status` TEXT NOT NULL,
+                    `createdAt` TEXT NOT NULL,
+                    `expiresAt` TEXT NOT NULL,
+                    PRIMARY KEY(`id`)
+                )
+            """.trimIndent())
+        }
+    }
+
     private val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             // Create children table
@@ -144,7 +176,7 @@ object DatabaseModule {
             KodomoAlbumDatabase::class.java,
             Constants.DATABASE_NAME
         )
-        .addMigrations(MIGRATION_1_2)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
         .build()
     }
 
@@ -168,4 +200,7 @@ object DatabaseModule {
 
     @Provides
     fun provideEventDao(database: KodomoAlbumDatabase): EventDao = database.eventDao()
+
+    @Provides
+    fun provideFamilyDao(database: KodomoAlbumDatabase): com.example.kodomoalbum.data.local.dao.FamilyDao = database.familyDao()
 }

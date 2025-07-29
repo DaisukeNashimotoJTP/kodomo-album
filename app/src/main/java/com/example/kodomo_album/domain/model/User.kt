@@ -3,6 +3,7 @@ package com.example.kodomo_album.domain.model
 data class User(
     val id: String = "",
     val email: String = "",
+    val name: String = "",
     val displayName: String = "",
     val profileImageUrl: String = "",
     val createdAt: Long = System.currentTimeMillis(),

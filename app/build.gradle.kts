@@ -47,6 +47,7 @@ android {
         baseline = file("lint-baseline.xml")
         abortOnError = false
     }
+    
 }
 
 dependencies {
@@ -68,6 +69,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+    implementation("com.google.firebase:firebase-functions-ktx")
     
     // Room
     implementation(libs.room.runtime)

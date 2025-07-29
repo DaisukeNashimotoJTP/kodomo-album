@@ -34,7 +34,8 @@ fun MediaDetailScreen(
     media: Media,
     onNavigateUp: () -> Unit,
     onDeleteClick: (() -> Unit)? = null,
-    onEditClick: (() -> Unit)? = null
+    onEditClick: (() -> Unit)? = null,
+    onShareClick: (() -> Unit)? = null
 ) {
     var showFullScreen by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -80,8 +81,10 @@ fun MediaDetailScreen(
                 }
                 
                 // 共有ボタン
-                IconButton(onClick = { /* TODO: 共有機能 */ }) {
-                    Icon(Icons.Default.Share, contentDescription = "共有")
+                onShareClick?.let { shareAction ->
+                    IconButton(onClick = shareAction) {
+                        Icon(Icons.Default.Share, contentDescription = "共有")
+                    }
                 }
             }
         )

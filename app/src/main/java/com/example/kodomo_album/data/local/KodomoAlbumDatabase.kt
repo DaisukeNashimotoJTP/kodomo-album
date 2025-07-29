@@ -14,9 +14,11 @@ import com.example.kodomo_album.data.local.entity.*
         DiaryEntity::class,
         GrowthRecordEntity::class,
         MilestoneEntity::class,
-        EventEntity::class
+        EventEntity::class,
+        com.example.kodomoalbum.data.local.entity.FamilyEntity::class,
+        com.example.kodomoalbum.data.local.entity.InvitationEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(DatabaseConverters::class)
@@ -28,4 +30,5 @@ abstract class KodomoAlbumDatabase : RoomDatabase() {
     abstract fun growthRecordDao(): GrowthRecordDao
     abstract fun milestoneDao(): MilestoneDao
     abstract fun eventDao(): EventDao
+    abstract fun familyDao(): com.example.kodomoalbum.data.local.dao.FamilyDao
 }

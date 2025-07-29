@@ -8,6 +8,8 @@ import com.example.kodomo_album.data.repository.DiaryRepositoryImpl
 import com.example.kodomo_album.data.repository.MediaRepositoryImpl
 import com.example.kodomo_album.domain.repository.DiaryRepository
 import com.example.kodomo_album.domain.repository.MediaRepository
+import com.example.kodomoalbum.data.repository.SharingRepositoryImpl
+import com.example.kodomoalbum.domain.repository.SharingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -41,4 +43,10 @@ abstract class RepositoryModule {
     abstract fun bindDiaryRepository(
         diaryRepositoryImpl: DiaryRepositoryImpl
     ): DiaryRepository
+    
+    @Binds
+    @Singleton
+    abstract fun bindSharingRepository(
+        sharingRepositoryImpl: SharingRepositoryImpl
+    ): SharingRepository
 }

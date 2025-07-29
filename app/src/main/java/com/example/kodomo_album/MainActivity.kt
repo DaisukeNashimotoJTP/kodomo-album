@@ -274,6 +274,48 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+                        
+                        // Family Sharing Routes
+                        composable("family_management") {
+                            com.example.kodomoalbum.presentation.ui.sharing.FamilyManagementScreen(
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                },
+                                onNavigateToInvitePartner = {
+                                    navController.navigate("invite_partner")
+                                },
+                                onNavigateToInvitations = {
+                                    navController.navigate("invitation_list")
+                                },
+                                onNavigateToSharedContent = {
+                                    navController.navigate("shared_content")
+                                }
+                            )
+                        }
+                        
+                        composable("invite_partner") {
+                            com.example.kodomoalbum.presentation.ui.sharing.InvitePartnerScreen(
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        
+                        composable("invitation_list") {
+                            com.example.kodomoalbum.presentation.ui.sharing.InvitationListScreen(
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        
+                        composable("shared_content") {
+                            com.example.kodomoalbum.presentation.ui.sharing.SharedContentScreen(
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
                     }
                 }
             }

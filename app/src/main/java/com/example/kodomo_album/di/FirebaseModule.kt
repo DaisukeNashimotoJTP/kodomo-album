@@ -8,6 +8,7 @@ import com.example.kodomo_album.data.mapper.FirebaseMapper
 import com.example.kodomo_album.data.repository.SyncRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
@@ -42,6 +43,21 @@ object FirebaseModule {
     @Singleton
     fun provideFirebaseStorage(): FirebaseStorage {
         return FirebaseStorage.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFunctions(): FirebaseFunctions {
+        return FirebaseFunctions.getInstance()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideFirebaseFamilyDataSource(
+        firestore: FirebaseFirestore,
+        functions: FirebaseFunctions
+    ): com.example.kodomoalbum.data.remote.firebase.FirebaseFamilyDataSource {
+        return com.example.kodomoalbum.data.remote.firebase.FirebaseFamilyDataSource(firestore, functions)
     }
 
     @Provides

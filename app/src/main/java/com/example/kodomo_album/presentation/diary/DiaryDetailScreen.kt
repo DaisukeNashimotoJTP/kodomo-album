@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,6 +37,7 @@ fun DiaryDetailScreen(
     onNavigateUp: () -> Unit,
     onNavigateToEdit: (String) -> Unit,
     onNavigateToMediaDetail: (String) -> Unit,
+    onShareClick: (() -> Unit)? = null,
     diaryViewModel: DiaryDetailViewModel = hiltViewModel(),
     mediaViewModel: MediaTimelineViewModel = hiltViewModel()
 ) {
@@ -90,6 +92,12 @@ fun DiaryDetailScreen(
                             onClick = { onNavigateToEdit(diaryId) }
                         ) {
                             Icon(Icons.Default.Edit, contentDescription = "編集")
+                        }
+                        
+                        onShareClick?.let { shareAction ->
+                            IconButton(onClick = shareAction) {
+                                Icon(Icons.Default.Share, contentDescription = "共有")
+                            }
                         }
                     }
                 }
