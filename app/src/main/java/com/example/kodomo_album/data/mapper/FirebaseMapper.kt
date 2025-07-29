@@ -5,6 +5,7 @@ import com.example.kodomo_album.data.local.entity.*
 import com.example.kodomo_album.domain.model.Child
 import com.example.kodomo_album.domain.model.Diary
 import com.example.kodomo_album.domain.model.Gender
+import com.example.kodomo_album.domain.model.GrowthRecord
 import com.example.kodomo_album.domain.model.Media
 import com.example.kodomo_album.domain.model.MediaType
 import com.google.firebase.Timestamp
@@ -163,6 +164,30 @@ class FirebaseMapper @Inject constructor() {
         date = Timestamp(diary.date.atStartOfDay(ZoneId.systemDefault()).toInstant()),
         createdAt = Timestamp(diary.createdAt.atZone(ZoneId.systemDefault()).toInstant()),
         updatedAt = Timestamp(diary.updatedAt.atZone(ZoneId.systemDefault()).toInstant())
+    )
+
+    // GrowthRecord mapping
+    fun domainToFirebaseGrowthRecord(growth: GrowthRecord): FirebaseGrowthRecord = FirebaseGrowthRecord(
+        id = growth.id,
+        childId = growth.childId,
+        height = growth.height,
+        weight = growth.weight,
+        headCircumference = growth.headCircumference,
+        recordedAt = Timestamp(growth.recordedAt.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+        notes = growth.notes,
+        createdAt = Timestamp.now()
+    )
+
+    fun firebaseGrowthRecordToDomain(firebase: FirebaseGrowthRecord): GrowthRecord = GrowthRecord(
+        id = firebase.id,
+        childId = firebase.childId,
+        height = firebase.height,
+        weight = firebase.weight,
+        headCircumference = firebase.headCircumference,
+        recordedAt = firebase.recordedAt.toDate().toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate(),
+        notes = firebase.notes
     )
 }
 

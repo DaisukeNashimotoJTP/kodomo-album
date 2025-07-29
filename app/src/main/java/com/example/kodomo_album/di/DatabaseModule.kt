@@ -7,6 +7,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.kodomo_album.core.util.Constants
 import com.example.kodomo_album.data.local.KodomoAlbumDatabase
 import com.example.kodomo_album.data.local.dao.*
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -203,4 +204,8 @@ object DatabaseModule {
 
     @Provides
     fun provideFamilyDao(database: KodomoAlbumDatabase): com.example.kodomoalbum.data.local.dao.FamilyDao = database.familyDao()
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson = Gson()
 }

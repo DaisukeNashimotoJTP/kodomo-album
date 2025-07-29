@@ -5,9 +5,15 @@ import com.example.kodomo_album.data.repository.AuthRepositoryImpl
 import com.example.kodomo_album.data.repository.ChildRepository
 import com.example.kodomo_album.data.repository.ChildRepositoryImpl
 import com.example.kodomo_album.data.repository.DiaryRepositoryImpl
+import com.example.kodomo_album.data.repository.EventRepositoryImpl
+import com.example.kodomo_album.data.repository.GrowthRepositoryImpl
 import com.example.kodomo_album.data.repository.MediaRepositoryImpl
+import com.example.kodomo_album.data.repository.MilestoneRepositoryImpl
 import com.example.kodomo_album.domain.repository.DiaryRepository
+import com.example.kodomo_album.domain.repository.EventRepository
+import com.example.kodomo_album.domain.repository.GrowthRepository
 import com.example.kodomo_album.domain.repository.MediaRepository
+import com.example.kodomo_album.domain.repository.MilestoneRepository
 import com.example.kodomoalbum.data.repository.SharingRepositoryImpl
 import com.example.kodomoalbum.domain.repository.SharingRepository
 import dagger.Binds
@@ -49,4 +55,22 @@ abstract class RepositoryModule {
     abstract fun bindSharingRepository(
         sharingRepositoryImpl: SharingRepositoryImpl
     ): SharingRepository
+    
+    @Binds
+    @Singleton
+    abstract fun bindGrowthRepository(
+        growthRepositoryImpl: GrowthRepositoryImpl
+    ): GrowthRepository
+    
+    @Binds
+    @Singleton
+    abstract fun bindMilestoneRepository(
+        milestoneRepositoryImpl: MilestoneRepositoryImpl
+    ): MilestoneRepository
+    
+    @Binds
+    @Singleton
+    abstract fun bindEventRepository(
+        eventRepositoryImpl: EventRepositoryImpl
+    ): EventRepository
 }

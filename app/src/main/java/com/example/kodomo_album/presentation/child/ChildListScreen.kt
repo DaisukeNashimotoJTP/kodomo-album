@@ -10,6 +10,9 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,6 +38,9 @@ fun ChildListScreen(
     onEditChildClick: (Child) -> Unit,
     onAddMediaClick: () -> Unit = {},
     onViewDiaryClick: (String) -> Unit = {},
+    onViewGrowthClick: (String) -> Unit = {},
+    onViewMilestoneClick: (String) -> Unit = {},
+    onViewEventClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: ChildManagementViewModel = hiltViewModel()
 ) {
@@ -139,7 +145,10 @@ fun ChildListScreen(
                             child = child,
                             onEditClick = { onEditChildClick(child) },
                             onDeleteClick = { showDeleteDialog = child },
-                            onViewDiaryClick = { onViewDiaryClick(child.id) }
+                            onViewDiaryClick = { onViewDiaryClick(child.id) },
+                            onViewGrowthClick = { onViewGrowthClick(child.id) },
+                            onViewMilestoneClick = { onViewMilestoneClick(child.id) },
+                            onViewEventClick = { onViewEventClick(child.id) }
                         )
                     }
                 }
@@ -178,6 +187,9 @@ private fun ChildItem(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onViewDiaryClick: () -> Unit,
+    onViewGrowthClick: () -> Unit,
+    onViewMilestoneClick: () -> Unit,
+    onViewEventClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -227,6 +239,15 @@ private fun ChildItem(
             Row {
                 IconButton(onClick = onViewDiaryClick) {
                     Icon(Icons.Default.Book, contentDescription = "${child.name}の日記")
+                }
+                IconButton(onClick = onViewGrowthClick) {
+                    Icon(Icons.Default.TrendingUp, contentDescription = "${child.name}の成長記録")
+                }
+                IconButton(onClick = onViewMilestoneClick) {
+                    Icon(Icons.Default.Star, contentDescription = "${child.name}の発達記録")
+                }
+                IconButton(onClick = onViewEventClick) {
+                    Icon(Icons.Default.Event, contentDescription = "${child.name}のイベント記録")
                 }
                 IconButton(onClick = onEditClick) {
                     Icon(Icons.Default.Edit, contentDescription = "${child.name}を編集")

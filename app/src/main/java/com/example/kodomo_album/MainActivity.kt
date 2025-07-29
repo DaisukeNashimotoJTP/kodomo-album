@@ -29,6 +29,13 @@ import com.example.kodomo_album.presentation.diary.DiaryListScreen
 import com.example.kodomo_album.presentation.diary.DiaryCreateEditScreen
 import com.example.kodomo_album.presentation.diary.DiaryDetailScreen
 import com.example.kodomo_album.presentation.diary.MediaSelectionScreen
+import com.example.kodomo_album.presentation.growth.GrowthRecordScreen
+import com.example.kodomo_album.presentation.growth.GrowthChartScreen
+import com.example.kodomo_album.presentation.growth.GrowthSummaryScreen
+import com.example.kodomo_album.presentation.milestone.MilestoneListScreen
+import com.example.kodomo_album.presentation.milestone.MilestoneInputScreen
+import com.example.kodomo_album.presentation.event.EventListScreen
+import com.example.kodomo_album.presentation.event.EventInputScreen
 import com.example.kodomo_album.domain.usecase.child.GetChildrenUseCase
 import com.example.kodomo_album.ui.theme.KodomoalbumTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -136,6 +143,15 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onViewDiaryClick = { childId ->
                                     navController.navigate("diary_list/$childId")
+                                },
+                                onViewGrowthClick = { childId ->
+                                    navController.navigate("growth_record/$childId")
+                                },
+                                onViewMilestoneClick = { childId ->
+                                    navController.navigate("milestone_list/$childId")
+                                },
+                                onViewEventClick = { childId ->
+                                    navController.navigate("event_list/$childId")
                                 }
                             )
                         }
@@ -312,6 +328,115 @@ class MainActivity : ComponentActivity() {
                         composable("shared_content") {
                             com.example.kodomoalbum.presentation.ui.sharing.SharedContentScreen(
                                 onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        
+                        // Growth Record screens
+                        composable(
+                            "growth_record/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            GrowthRecordScreen(
+                                childId = childId,
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                },
+                                onNavigateToChart = { childId ->
+                                    navController.navigate("growth_chart/$childId")
+                                },
+                                onNavigateToSummary = { childId ->
+                                    navController.navigate("growth_summary/$childId")
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "growth_chart/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            GrowthChartScreen(
+                                childId = childId,
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "growth_summary/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            GrowthSummaryScreen(
+                                childId = childId,
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                },
+                                onExportData = {
+                                    // TODO: Implement data export functionality
+                                }
+                            )
+                        }
+                        
+                        // Milestone screens
+                        composable(
+                            "milestone_list/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            MilestoneListScreen(
+                                childId = childId,
+                                onNavigateUp = {
+                                    navController.popBackStack()
+                                },
+                                onNavigateToAdd = {
+                                    navController.navigate("milestone_input/$childId")
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "milestone_input/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            MilestoneInputScreen(
+                                childId = childId,
+                                onNavigateUp = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        
+                        // Event screens
+                        composable(
+                            "event_list/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            EventListScreen(
+                                childId = childId,
+                                onNavigateUp = {
+                                    navController.popBackStack()
+                                },
+                                onNavigateToAdd = {
+                                    navController.navigate("event_input/$childId")
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "event_input/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            EventInputScreen(
+                                childId = childId,
+                                onNavigateUp = {
                                     navController.popBackStack()
                                 }
                             )
