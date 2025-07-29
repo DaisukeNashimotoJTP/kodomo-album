@@ -124,6 +124,22 @@ class MediaTimelineViewModel @Inject constructor(
             }
         }
     }
+
+    fun loadMediaByIds(mediaIds: List<String>) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            
+            // 現在のメディアリストから指定されたIDのメディアをフィルタ
+            val filteredMedia = _uiState.value.mediaList.filter { media ->
+                mediaIds.contains(media.id)
+            }
+            
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                mediaList = filteredMedia
+            )
+        }
+    }
 }
 
 data class MediaTimelineUiState(

@@ -3,6 +3,7 @@ package com.example.kodomo_album.data.mapper
 import com.example.kodomo_album.data.firebase.models.*
 import com.example.kodomo_album.data.local.entity.*
 import com.example.kodomo_album.domain.model.Child
+import com.example.kodomo_album.domain.model.Diary
 import com.example.kodomo_album.domain.model.Gender
 import com.example.kodomo_album.domain.model.Media
 import com.example.kodomo_album.domain.model.MediaType
@@ -115,6 +116,53 @@ class FirebaseMapper @Inject constructor() {
         profileImageUrl = child.profileImageUrl,
         createdAt = child.createdAt,
         updatedAt = child.updatedAt
+    )
+
+    // Diary domain model mapping
+    fun diaryEntityToDomain(entity: DiaryEntity): Diary = Diary(
+        id = entity.id,
+        childId = entity.childId,
+        title = entity.title,
+        content = entity.content,
+        mediaIds = if (entity.mediaIds.isEmpty()) emptyList() else entity.mediaIds.split(","),
+        date = Instant.ofEpochMilli(entity.date)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate(),
+        createdAt = Instant.ofEpochMilli(entity.createdAt)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime(),
+        updatedAt = Instant.ofEpochMilli(entity.updatedAt)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
+    )
+
+    fun diaryToEntity(diary: Diary): DiaryEntity = DiaryEntity(
+        id = diary.id,
+        childId = diary.childId,
+        title = diary.title,
+        content = diary.content,
+        mediaIds = diary.mediaIds.joinToString(","),
+        date = diary.date.atStartOfDay(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli(),
+        createdAt = diary.createdAt.atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli(),
+        updatedAt = diary.updatedAt.atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli(),
+        isSynced = false
+    )
+
+    fun diaryToFirebase(diary: Diary): FirebaseDiary = FirebaseDiary(
+        id = diary.id,
+        childId = diary.childId,
+        title = diary.title,
+        content = diary.content,
+        mediaIds = diary.mediaIds,
+        date = Timestamp(diary.date.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+        createdAt = Timestamp(diary.createdAt.atZone(ZoneId.systemDefault()).toInstant()),
+        updatedAt = Timestamp(diary.updatedAt.atZone(ZoneId.systemDefault()).toInstant())
     )
 }
 

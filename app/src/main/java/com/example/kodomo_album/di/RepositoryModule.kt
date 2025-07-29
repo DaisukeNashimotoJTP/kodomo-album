@@ -4,7 +4,9 @@ import com.example.kodomo_album.data.repository.AuthRepository
 import com.example.kodomo_album.data.repository.AuthRepositoryImpl
 import com.example.kodomo_album.data.repository.ChildRepository
 import com.example.kodomo_album.data.repository.ChildRepositoryImpl
+import com.example.kodomo_album.data.repository.DiaryRepositoryImpl
 import com.example.kodomo_album.data.repository.MediaRepositoryImpl
+import com.example.kodomo_album.domain.repository.DiaryRepository
 import com.example.kodomo_album.domain.repository.MediaRepository
 import dagger.Binds
 import dagger.Module
@@ -33,4 +35,10 @@ abstract class RepositoryModule {
     abstract fun bindMediaRepository(
         mediaRepositoryImpl: MediaRepositoryImpl
     ): MediaRepository
+    
+    @Binds
+    @Singleton
+    abstract fun bindDiaryRepository(
+        diaryRepositoryImpl: DiaryRepositoryImpl
+    ): DiaryRepository
 }
