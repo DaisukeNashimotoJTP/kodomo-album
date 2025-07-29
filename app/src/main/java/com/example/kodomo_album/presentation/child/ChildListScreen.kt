@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ fun ChildListScreen(
     onAddChildClick: () -> Unit,
     onEditChildClick: (Child) -> Unit,
     onAddMediaClick: () -> Unit = {},
+    onViewDiaryClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: ChildManagementViewModel = hiltViewModel()
 ) {
@@ -136,7 +138,8 @@ fun ChildListScreen(
                         ChildItem(
                             child = child,
                             onEditClick = { onEditChildClick(child) },
-                            onDeleteClick = { showDeleteDialog = child }
+                            onDeleteClick = { showDeleteDialog = child },
+                            onViewDiaryClick = { onViewDiaryClick(child.id) }
                         )
                     }
                 }
@@ -174,6 +177,7 @@ private fun ChildItem(
     child: Child,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onViewDiaryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -221,6 +225,9 @@ private fun ChildItem(
             }
             
             Row {
+                IconButton(onClick = onViewDiaryClick) {
+                    Icon(Icons.Default.Book, contentDescription = "${child.name}の日記")
+                }
                 IconButton(onClick = onEditClick) {
                     Icon(Icons.Default.Edit, contentDescription = "${child.name}を編集")
                 }

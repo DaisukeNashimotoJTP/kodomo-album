@@ -25,6 +25,10 @@ import com.example.kodomo_album.presentation.profile.ProfileScreen
 import com.example.kodomo_album.presentation.child.ChildListScreen
 import com.example.kodomo_album.presentation.child.AddEditChildScreen
 import com.example.kodomo_album.presentation.media.MediaUploadScreen
+import com.example.kodomo_album.presentation.diary.DiaryListScreen
+import com.example.kodomo_album.presentation.diary.DiaryCreateEditScreen
+import com.example.kodomo_album.presentation.diary.DiaryDetailScreen
+import com.example.kodomo_album.presentation.diary.MediaSelectionScreen
 import com.example.kodomo_album.domain.usecase.child.GetChildrenUseCase
 import com.example.kodomo_album.ui.theme.KodomoalbumTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -129,6 +133,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onAddMediaClick = {
                                     navController.navigate("media_upload")
+                                },
+                                onViewDiaryClick = { childId ->
+                                    navController.navigate("diary_list/$childId")
                                 }
                             )
                         }
@@ -169,6 +176,100 @@ class MainActivity : ComponentActivity() {
                             MediaUploadScreen(
                                 children = children,
                                 onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        
+                        // Diary screens
+                        composable(
+                            "diary_list/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            DiaryListScreen(
+                                childId = childId,
+                                onNavigateToCreate = {
+                                    navController.navigate("diary_create/$childId")
+                                },
+                                onNavigateToDetail = { diaryId ->
+                                    navController.navigate("diary_detail/$diaryId")
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "diary_create/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            DiaryCreateEditScreen(
+                                childId = childId,
+                                diaryId = null,
+                                onNavigateUp = {
+                                    navController.popBackStack()
+                                },
+                                onSelectMedia = {
+                                    navController.navigate("media_selection/$childId")
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "diary_edit/{childId}/{diaryId}",
+                            arguments = listOf(
+                                navArgument("childId") { type = NavType.StringType },
+                                navArgument("diaryId") { type = NavType.StringType }
+                            )
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            val diaryId = backStackEntry.arguments?.getString("diaryId") ?: ""
+                            DiaryCreateEditScreen(
+                                childId = childId,
+                                diaryId = diaryId,
+                                onNavigateUp = {
+                                    navController.popBackStack()
+                                },
+                                onSelectMedia = {
+                                    navController.navigate("media_selection/$childId")
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "diary_detail/{diaryId}",
+                            arguments = listOf(navArgument("diaryId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val diaryId = backStackEntry.arguments?.getString("diaryId") ?: ""
+                            DiaryDetailScreen(
+                                diaryId = diaryId,
+                                onNavigateUp = {
+                                    navController.popBackStack()
+                                },
+                                onNavigateToEdit = { editDiaryId ->
+                                    // We need childId to navigate to edit, so we'll need to get it from the diary
+                                    // For now, we'll just go back - this can be improved later
+                                    navController.popBackStack()
+                                },
+                                onNavigateToMediaDetail = { mediaId ->
+                                    // Navigate to media detail if exists
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "media_selection/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            MediaSelectionScreen(
+                                childId = childId,
+                                selectedMediaIds = emptyList(), // This should be passed from the diary screen
+                                onMediaSelected = { mediaIds ->
+                                    // Handle selected media - navigate back with result
+                                    navController.popBackStack()
+                                },
+                                onNavigateUp = {
                                     navController.popBackStack()
                                 }
                             )
