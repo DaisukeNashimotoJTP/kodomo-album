@@ -39,4 +39,7 @@ interface MilestoneDao {
     
     @Query("UPDATE milestones SET isSynced = 1 WHERE id = :milestoneId")
     suspend fun markAsSynced(milestoneId: String)
+    
+    @Query("SELECT * FROM milestones WHERE (title LIKE :keyword OR description LIKE :keyword) ORDER BY achievedAt DESC")
+    suspend fun searchMilestones(keyword: String): List<MilestoneEntity>
 }

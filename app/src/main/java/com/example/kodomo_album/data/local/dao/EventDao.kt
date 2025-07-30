@@ -42,4 +42,7 @@ interface EventDao {
     
     @Query("UPDATE events SET isSynced = 1 WHERE id = :eventId")
     suspend fun markAsSynced(eventId: String)
+    
+    @Query("SELECT * FROM events WHERE (title LIKE :keyword OR description LIKE :keyword) ORDER BY eventDate DESC")
+    suspend fun searchEvents(keyword: String): List<EventEntity>
 }

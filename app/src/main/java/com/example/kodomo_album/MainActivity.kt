@@ -38,6 +38,10 @@ import com.example.kodomo_album.presentation.event.EventListScreen
 import com.example.kodomo_album.presentation.event.EventInputScreen
 import com.example.kodomo_album.domain.usecase.child.GetChildrenUseCase
 import com.example.kodomo_album.ui.theme.KodomoalbumTheme
+import com.example.kodomoalbum.presentation.dashboard.DashboardScreen
+import com.example.kodomoalbum.presentation.search.SearchScreen
+import com.example.kodomoalbum.presentation.search.AdvancedSearchScreen
+import com.example.kodomoalbum.presentation.export.ExportScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -152,6 +156,15 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onViewEventClick = { childId ->
                                     navController.navigate("event_list/$childId")
+                                },
+                                onDashboardClick = { childId ->
+                                    navController.navigate("dashboard/$childId")
+                                },
+                                onSearchClick = {
+                                    navController.navigate("search")
+                                },
+                                onExportClick = { childId ->
+                                    navController.navigate("export/$childId")
                                 }
                             )
                         }
@@ -437,6 +450,81 @@ class MainActivity : ComponentActivity() {
                             EventInputScreen(
                                 childId = childId,
                                 onNavigateUp = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        
+                        // New Advanced Features (Phase 9)
+                        composable(
+                            "dashboard/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            DashboardScreen(
+                                childId = childId,
+                                onNavigateToSearch = {
+                                    navController.navigate("search")
+                                },
+                                onNavigateToExport = {
+                                    navController.navigate("export/$childId")
+                                },
+                                onNavigateToDetail = { type, id ->
+                                    when (type) {
+                                        "diary" -> navController.navigate("diary_detail/$id")
+                                        "media" -> {
+                                            // Navigate to media detail if exists
+                                        }
+                                        "event" -> navController.navigate("event_list/$childId")
+                                        "milestone" -> navController.navigate("milestone_list/$childId")
+                                        "growth" -> navController.navigate("growth_record/$childId")
+                                    }
+                                }
+                            )
+                        }
+                        
+                        composable("search") {
+                            SearchScreen(
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                },
+                                onNavigateToDetail = { searchResult ->
+                                    when (searchResult.type) {
+                                        com.example.kodomoalbum.data.model.SearchResultType.DIARY -> 
+                                            navController.navigate("diary_detail/${searchResult.id}")
+                                        com.example.kodomoalbum.data.model.SearchResultType.EVENT -> 
+                                            navController.navigate("event_list/${searchResult.childId}")
+                                        com.example.kodomoalbum.data.model.SearchResultType.MILESTONE -> 
+                                            navController.navigate("milestone_list/${searchResult.childId}")
+                                        com.example.kodomoalbum.data.model.SearchResultType.MEDIA -> {
+                                            // Navigate to media detail if exists
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                        
+                        composable("advanced_search") {
+                            AdvancedSearchScreen(
+                                initialFilter = com.example.kodomoalbum.data.model.SearchFilter(),
+                                onFilterApply = { filter ->
+                                    // Apply filter and navigate back to search
+                                    navController.popBackStack()
+                                },
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        
+                        composable(
+                            "export/{childId}",
+                            arguments = listOf(navArgument("childId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val childId = backStackEntry.arguments?.getString("childId") ?: ""
+                            ExportScreen(
+                                childId = childId,
+                                onNavigateBack = {
                                     navController.popBackStack()
                                 }
                             )

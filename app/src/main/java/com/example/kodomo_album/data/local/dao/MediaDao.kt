@@ -54,4 +54,7 @@ interface MediaDao {
     
     @Query("UPDATE media SET caption = :caption WHERE id = :mediaId")
     suspend fun updateMediaCaption(mediaId: String, caption: String)
+    
+    @Query("SELECT * FROM media WHERE caption LIKE :keyword ORDER BY takenAt DESC")
+    suspend fun searchMedia(keyword: String): List<MediaEntity>
 }

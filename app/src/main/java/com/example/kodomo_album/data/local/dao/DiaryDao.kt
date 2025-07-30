@@ -22,6 +22,9 @@ interface DiaryDao {
     @Query("SELECT * FROM diaries WHERE childId = :childId AND (title LIKE '%' || :keyword || '%' OR content LIKE '%' || :keyword || '%') ORDER BY date DESC")
     suspend fun searchDiaries(childId: String, keyword: String): List<DiaryEntity>
     
+    @Query("SELECT * FROM diaries WHERE (title LIKE :keyword OR content LIKE :keyword) ORDER BY date DESC")
+    suspend fun searchDiaries(keyword: String): List<DiaryEntity>
+    
     @Query("SELECT * FROM diaries WHERE isSynced = 0")
     suspend fun getUnsyncedDiaries(): List<DiaryEntity>
     
