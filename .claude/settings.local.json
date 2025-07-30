@@ -9,7 +9,9 @@
       "Bash(keytool:*)",
       "Bash(adb logcat:*)",
       "Bash(adb:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(.gradlew test)",
+      "Bash(find:*)"
     ],
     "deny": []
   }
